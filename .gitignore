@@ -1,0 +1,48 @@
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+*.xcworkspace/
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Environment & Secrets
+.env
+.env.local
+Configuration.local.swift
+
+# macOS
+.DS_Store
+.Trashes
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Build artifacts
+build/
+
+# Claude specific
+.claude/
+.claude.json
+.claude.json.backup
+
+# Other development tools
+.vscode/
+.windsurf/
+.windsurf-next/
