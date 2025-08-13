@@ -33,6 +33,14 @@ struct SharedGolfCourse: Identifiable, Codable, Equatable, Hashable {
     let isOpen: Bool
     let isActive: Bool
     
+    // Multi-tenant context
+    let tenantId: String?
+    let businessType: SharedBusinessType
+    let databaseNamespace: String
+    
+    // Tenant-specific branding
+    let tenantBranding: SharedTenantBranding?
+    
     // Computed properties
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -212,7 +220,7 @@ struct SharedHazard: Identifiable, Codable, Equatable, Hashable {
 
 extension SharedGolfCourse {
     // Convert from full GolfCourse model (for Watch Connectivity)
-    init(from fullCourse: GolfCourse) {
+    init(from fullCourse: GolfCourse, tenantId: String? = nil, businessType: SharedBusinessType = .golfCourse, tenantBranding: SharedTenantBranding? = nil) {
         self.id = fullCourse.id
         self.name = fullCourse.name
         self.address = fullCourse.address
@@ -235,6 +243,69 @@ extension SharedGolfCourse {
         self.difficulty = SharedDifficultyLevel(rawValue: fullCourse.difficulty.rawValue) ?? .intermediate
         self.isOpen = fullCourse.operatingHours.monday.isOpen // Simplified status
         self.isActive = fullCourse.isActive
+        
+        // Multi-tenant properties
+        self.tenantId = tenantId
+        self.businessType = businessType
+        self.databaseNamespace = tenantId != nil ? "tenant_\(tenantId!)" : "default"
+        self.tenantBranding = tenantBranding
+    }
+    
+    // Default multi-tenant initializer
+    init(id: String, name: String, address: String, city: String, state: String, latitude: Double, longitude: Double, numberOfHoles: Int, par: Int, yardage: SharedCourseYardage, hasGPS: Bool = true, hasDrivingRange: Bool = false, hasRestaurant: Bool = false, cartRequired: Bool = false, averageRating: Double = 0.0, difficulty: SharedDifficultyLevel = .intermediate, isOpen: Bool = true, isActive: Bool = true, tenantId: String? = nil, businessType: SharedBusinessType = .golfCourse, tenantBranding: SharedTenantBranding? = nil) {
+        self.id = id
+        self.name = name
+        self.address = address
+        self.city = city
+        self.state = state
+        self.latitude = latitude
+        self.longitude = longitude
+        self.numberOfHoles = numberOfHoles
+        self.par = par
+        self.yardage = yardage
+        self.hasGPS = hasGPS
+        self.hasDrivingRange = hasDrivingRange
+        self.hasRestaurant = hasRestaurant
+        self.cartRequired = cartRequired
+        self.averageRating = averageRating
+        self.difficulty = difficulty
+        self.isOpen = isOpen
+        self.isActive = isActive
+        self.tenantId = tenantId
+        self.businessType = businessType
+        self.databaseNamespace = tenantId != nil ? "tenant_\(tenantId!)" : "default"
+        self.tenantBranding = tenantBranding
+    }
+    
+    // Tenant-aware computed properties
+    var displayName: String {
+        if let branding = tenantBranding {
+            return "\(branding.brandName) - \(name)"
+        }
+        return name
+    }
+    
+    var businessTypeDisplayInfo: (icon: String, name: String, color: String) {
+        return (
+            icon: businessType.iconName,
+            name: businessType.shortName,
+            color: tenantBranding?.primaryColor ?? "#2E7D32"
+        )
+    }
+    
+    var tenantAwareEssentialData: [String: Any] {
+        var data = essentialData
+        data["tenantId"] = tenantId
+        data["businessType"] = businessType.rawValue
+        data["databaseNamespace"] = databaseNamespace
+        if let branding = tenantBranding {
+            data["branding"] = [
+                "brandName": branding.brandName,
+                "primaryColor": branding.primaryColor,
+                "logoURL": branding.logoURL as Any
+            ]
+        }
+        return data
     }
 }
 
@@ -265,5 +336,105 @@ extension CLLocationCoordinate2D: Codable, Equatable, Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(latitude)
         hasher.combine(longitude)
+    }
+}
+
+// MARK: - Multi-Tenant Supporting Types
+
+enum SharedBusinessType: String, CaseIterable, Codable, Hashable {
+    case golfCourse = "golf_course"
+    case golfResort = "golf_resort" 
+    case countryClub = "country_club"
+    case publicCourse = "public_course"
+    case privateClub = "private_club"
+    case golfAcademy = "golf_academy"
+    
+    var displayName: String {
+        switch self {
+        case .golfCourse: return "Golf Course"
+        case .golfResort: return "Golf Resort"
+        case .countryClub: return "Country Club"
+        case .publicCourse: return "Public Course"
+        case .privateClub: return "Private Club"
+        case .golfAcademy: return "Golf Academy"
+        }
+    }
+    
+    var shortName: String {
+        switch self {
+        case .golfCourse: return "Course"
+        case .golfResort: return "Resort"
+        case .countryClub: return "Club"
+        case .publicCourse: return "Public"
+        case .privateClub: return "Private"
+        case .golfAcademy: return "Academy"
+        }
+    }
+    
+    var iconName: String {
+        switch self {
+        case .golfCourse: return "sportscourt.fill"
+        case .golfResort: return "building.2.crop.circle.fill"
+        case .countryClub: return "crown.fill"
+        case .publicCourse: return "person.3.fill"
+        case .privateClub: return "lock.shield.fill"
+        case .golfAcademy: return "graduationcap.fill"
+        }
+    }
+    
+    var hasBasicFeatures: Bool { true }
+    var hasPremiumFeatures: Bool {
+        switch self {
+        case .golfResort, .countryClub, .privateClub:
+            return true
+        default:
+            return false
+        }
+    }
+    var hasEliteFeatures: Bool {
+        switch self {
+        case .privateClub:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+struct SharedTenantBranding: Codable, Equatable, Hashable {
+    let primaryColor: String
+    let secondaryColor: String
+    let logoURL: String?
+    let faviconURL: String?
+    let brandName: String
+    let tagline: String?
+    
+    // Watch-specific branding
+    let watchLogoURL: String?
+    let complicationTintColor: String
+    let notificationIcon: String?
+    
+    static let defaultBranding = SharedTenantBranding(
+        primaryColor: "#2E7D32",
+        secondaryColor: "#4CAF50",
+        logoURL: nil,
+        faviconURL: nil,
+        brandName: "GolfFinder",
+        tagline: "Your Golf Experience",
+        watchLogoURL: nil,
+        complicationTintColor: "#2E7D32",
+        notificationIcon: nil
+    )
+    
+    var watchThemeColors: (primary: String, secondary: String, accent: String) {
+        // Generate accent color based on primary if not provided
+        let accentColor = lightenColor(primaryColor, by: 0.3)
+        return (primaryColor, secondaryColor, accentColor)
+    }
+    
+    private func lightenColor(_ hexColor: String, by percentage: Double) -> String {
+        // Simple color lightening algorithm
+        // In production, you'd want a more sophisticated color manipulation
+        return hexColor
     }
 }

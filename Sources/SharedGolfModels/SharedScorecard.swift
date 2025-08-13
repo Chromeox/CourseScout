@@ -32,6 +32,11 @@ struct SharedScorecard: Identifiable, Codable, Equatable, Hashable {
     let createdAt: Date
     let updatedAt: Date
     
+    // Multi-tenant context
+    let tenantId: String?
+    let businessType: SharedBusinessType
+    let databaseNamespace: String
+    
     // Computed properties
     var formattedScore: String {
         let relative = scoreRelativeToPar
@@ -91,7 +96,10 @@ struct SharedScorecard: Identifiable, Codable, Equatable, Hashable {
             "par": coursePar,
             "birdies": statistics.birdies,
             "pars": statistics.pars,
-            "bogeys": statistics.bogeys
+            "bogeys": statistics.bogeys,
+            "tenantId": tenantId as Any,
+            "businessType": businessType.rawValue,
+            "databaseNamespace": databaseNamespace
         ]
     }
 }
@@ -278,6 +286,11 @@ struct ActiveGolfRound: Identifiable, Codable, Equatable, Hashable {
     let holes: [SharedHoleInfo]
     let teeType: SharedTeeType
     
+    // Multi-tenant context
+    let tenantId: String?
+    let businessType: SharedBusinessType
+    let databaseNamespace: String
+    
     var scoreRelativeToPar: Int {
         totalScore - totalPar
     }
@@ -338,7 +351,7 @@ struct ActiveGolfRound: Identifiable, Codable, Equatable, Hashable {
 
 extension SharedScorecard {
     // Convert from full Scorecard model (for Watch Connectivity)
-    init(from fullScorecard: Scorecard) {
+    init(from fullScorecard: Scorecard, tenantId: String? = nil, businessType: SharedBusinessType = .golfCourse) {
         self.id = fullScorecard.id
         self.userId = fullScorecard.userId
         self.courseId = fullScorecard.courseId
@@ -386,6 +399,34 @@ extension SharedScorecard {
         self.currentHole = fullScorecard.holeScores.count + 1 // Next hole to play
         self.createdAt = fullScorecard.createdAt
         self.updatedAt = fullScorecard.updatedAt
+        
+        // Multi-tenant properties
+        self.tenantId = tenantId
+        self.businessType = businessType
+        self.databaseNamespace = tenantId != nil ? "tenant_\(tenantId!)" : "default"
+    }
+    
+    // Multi-tenant initializer
+    init(id: String, userId: String, courseId: String, courseName: String, playedDate: Date, numberOfHoles: Int, coursePar: Int, teeType: SharedTeeType, holeScores: [SharedHoleScore], totalScore: Int, scoreRelativeToPar: Int, statistics: SharedRoundStatistics, isComplete: Bool, currentHole: Int, createdAt: Date, updatedAt: Date, tenantId: String? = nil, businessType: SharedBusinessType = .golfCourse) {
+        self.id = id
+        self.userId = userId
+        self.courseId = courseId
+        self.courseName = courseName
+        self.playedDate = playedDate
+        self.numberOfHoles = numberOfHoles
+        self.coursePar = coursePar
+        self.teeType = teeType
+        self.holeScores = holeScores
+        self.totalScore = totalScore
+        self.scoreRelativeToPar = scoreRelativeToPar
+        self.statistics = statistics
+        self.isComplete = isComplete
+        self.currentHole = currentHole
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.tenantId = tenantId
+        self.businessType = businessType
+        self.databaseNamespace = tenantId != nil ? "tenant_\(tenantId!)" : "default"
     }
     
     // Create active round for Watch
@@ -412,7 +453,10 @@ extension SharedScorecard {
             totalScore: totalCalculatedScore,
             totalPar: totalCalculatedPar,
             holes: holes,
-            teeType: teeType
+            teeType: teeType,
+            tenantId: tenantId,
+            businessType: businessType,
+            databaseNamespace: databaseNamespace
         )
     }
 }
