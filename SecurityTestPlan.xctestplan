@@ -1,0 +1,96 @@
+{
+  "configurations" : [
+    {
+      "id" : "S1E2C3U4-R5I6T-Y7T8E-S9T0-ABCDEF123456",
+      "name" : "Security Tests Configuration",
+      "options" : {
+        "codeCoverage" : {
+          "enabled" : true,
+          "targets" : [
+            {
+              "containerPath" : "container:",
+              "identifier" : "GolfFinderSwiftUI",
+              "name" : "GolfFinderSwiftUI"
+            }
+          ]
+        },
+        "environmentVariableEntries" : [
+          {
+            "key" : "TEST_ENVIRONMENT",
+            "value" : "security_testing"
+          },
+          {
+            "key" : "USE_MOCK_SERVICES",
+            "value" : "false"
+          },
+          {
+            "key" : "SECURITY_TESTING_MODE",
+            "value" : "true"
+          },
+          {
+            "key" : "ENABLE_VULNERABILITY_SCANNING",
+            "value" : "true"
+          },
+          {
+            "key" : "ENABLE_PENETRATION_TESTING",
+            "value" : "true"
+          },
+          {
+            "key" : "SECURITY_AUDIT_LEVEL",
+            "value" : "comprehensive"
+          },
+          {
+            "key" : "GDPR_COMPLIANCE_TESTING",
+            "value" : "true"
+          },
+          {
+            "key" : "PII_MASKING_TESTING",
+            "value" : "true"
+          },
+          {
+            "key" : "ENCRYPTION_VALIDATION",
+            "value" : "true"
+          },
+          {
+            "key" : "AUTHENTICATION_BYPASS_TESTING",
+            "value" : "true"
+          }
+        ],
+        "language" : "en",
+        "region" : "US",
+        "testTimeoutsEnabled" : true,
+        "defaultTestExecutionTimeAllowance" : 600,
+        "maximumTestExecutionTimeAllowance" : 1800
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "enabled" : true
+    },
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GolfFinderSwiftUITests",
+        "name" : "GolfFinderSwiftUITests"
+      },
+      "selectedTests" : [
+        "SecurityValidationTests/testAuthentication_SQLInjectionAttempts_ShouldBlockAllAttempts",
+        "SecurityValidationTests/testAuthentication_XSSAttempts_ShouldSanitizeInputs",
+        "SecurityValidationTests/testAuthentication_BruteForceProtection_ShouldImplementRateLimit",
+        "SecurityValidationTests/testAPIGateway_AuthenticationBypass_ShouldPreventAllAttempts",
+        "SecurityValidationTests/testAPIGateway_InputValidation_ShouldRejectMaliciousInputs",
+        "SecurityValidationTests/testDataSecurity_EncryptionAtRest_ShouldUseStrongEncryption",
+        "SecurityValidationTests/testDataSecurity_PII_ShouldBeProperlyMasked",
+        "SecurityValidationTests/testGDPRCompliance_DataRetention_ShouldEnforcePolicies",
+        "SecurityValidationTests/testGDPRCompliance_DataDeletion_ShouldCompleteWithinTimeline",
+        "SecurityValidationTests/testVulnerabilityScanning_KnownVulnerabilities_ShouldDetectThreats",
+        "SecurityValidationTests/testNetworkSecurity_TLSConfiguration_ShouldUseStrongEncryption"
+      ]
+    }
+  ],
+  "version" : 1
+}

@@ -1,0 +1,90 @@
+{
+  "configurations" : [
+    {
+      "id" : "P1E2R3F4-O5R6M-A7N8C-E9T0-123456789ABC",
+      "name" : "Performance Tests Configuration",
+      "options" : {
+        "codeCoverage" : {
+          "enabled" : false
+        },
+        "environmentVariableEntries" : [
+          {
+            "key" : "TEST_ENVIRONMENT",
+            "value" : "performance"
+          },
+          {
+            "key" : "USE_MOCK_SERVICES",
+            "value" : "false"
+          },
+          {
+            "key" : "PERFORMANCE_TESTING_MODE",
+            "value" : "true"
+          },
+          {
+            "key" : "ENABLE_PERFORMANCE_METRICS",
+            "value" : "true"
+          },
+          {
+            "key" : "LOAD_TEST_CONCURRENT_USERS",
+            "value" : "50000"
+          },
+          {
+            "key" : "LOAD_TEST_DURATION_SECONDS",
+            "value" : "300"
+          },
+          {
+            "key" : "MEMORY_PRESSURE_TESTING",
+            "value" : "true"
+          },
+          {
+            "key" : "CPU_INTENSIVE_TESTING",
+            "value" : "true"
+          },
+          {
+            "key" : "NETWORK_SIMULATION_ENABLED",
+            "value" : "true"
+          },
+          {
+            "key" : "BATTERY_IMPACT_TESTING",
+            "value" : "true"
+          }
+        ],
+        "language" : "en",
+        "region" : "US",
+        "testTimeoutsEnabled" : true,
+        "defaultTestExecutionTimeAllowance" : 1800,
+        "maximumTestExecutionTimeAllowance" : 3600
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "enabled" : false
+    },
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GolfFinderSwiftUITests",
+        "name" : "GolfFinderSwiftUITests"
+      },
+      "selectedTests" : [
+        "EnterpriseLoadTests/testEnterpriseConcurrentUsers_50000Users_ShouldMaintainPerformance",
+        "EnterpriseLoadTests/testAPIGateway_MassiveAPIUsage_ShouldScale",
+        "EnterpriseLoadTests/testMemoryUsage_UnderExtremePressure_ShouldNotLeak",
+        "EnterpriseLoadTests/testDatabasePerformance_HighQueryLoad_ShouldMaintainSpeed",
+        "EnterpriseLoadTests/testNetworkPerformance_HighThroughput_ShouldMaintainQuality",
+        "EnterpriseLoadTests/testBatteryImpact_ExtendedUsage_ShouldBeOptimal",
+        "APIGatewayServiceTests/testProcessRequest_PerformanceUnder200ms",
+        "APIGatewayServiceTests/testConcurrentRequests_ShouldHandleMultipleRequestsSimultaneously",
+        "APIGatewayServiceTests/testAPIGatewayService_MemoryUsage_ShouldStayUnder500MB",
+        "GolfCourseServiceTests/testSearchCourses_Performance_ShouldCompleteUnder500ms",
+        "GolfCourseServiceTests/testConcurrentCourseRequests_ShouldHandleSimultaneousRequests",
+        "GolfCourseServiceTests/testGolfCourseService_MemoryUsage_ShouldNotLeak"
+      ]
+    }
+  ],
+  "version" : 1
+}

@@ -1,0 +1,81 @@
+{
+  "configurations" : [
+    {
+      "id" : "A1B2C3D4-5E6F-4A8B-9C1D-2E3F4A5B6C7D",
+      "name" : "Integration Tests Configuration",
+      "options" : {
+        "codeCoverage" : {
+          "enabled" : true,
+          "targets" : [
+            {
+              "containerPath" : "container:",
+              "identifier" : "GolfFinderSwiftUI",
+              "name" : "GolfFinderSwiftUI"
+            }
+          ]
+        },
+        "environmentVariableEntries" : [
+          {
+            "key" : "TEST_ENVIRONMENT",
+            "value" : "integration"
+          },
+          {
+            "key" : "USE_MOCK_SERVICES",
+            "value" : "false"
+          },
+          {
+            "key" : "TEST_DATABASE_URL",
+            "value" : "postgresql://test_user:test_password@localhost:5432/golf_finder_test"
+          },
+          {
+            "key" : "TEST_APPWRITE_ENDPOINT",
+            "value" : "http://localhost:8080/v1"
+          },
+          {
+            "key" : "ENABLE_DETAILED_LOGGING",
+            "value" : "true"
+          },
+          {
+            "key" : "INTEGRATION_TEST_TIMEOUT",
+            "value" : "300"
+          }
+        ],
+        "language" : "en",
+        "region" : "US",
+        "testTimeoutsEnabled" : true,
+        "defaultTestExecutionTimeAllowance" : 300,
+        "maximumTestExecutionTimeAllowance" : 1800
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "enabled" : true
+    },
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GolfFinderSwiftUITests",
+        "name" : "GolfFinderSwiftUITests"
+      },
+      "selectedTests" : [
+        "APIGatewayIntegrationTests",
+        "RevenueIntegrationTests",
+        "AuthenticationIntegrationTests",
+        "BookingFlowIntegrationTests",
+        "PaymentIntegrationTests",
+        "WhiteLabelIntegrationTests",
+        "WatchConnectivityIntegrationTests",
+        "NotificationIntegrationTests",
+        "AnalyticsIntegrationTests",
+        "SecurityIntegrationTests",
+        "DatabaseIntegrationTests",
+        "ThirdPartyServiceIntegrationTests"
+      ]
+    }
+  ],
+  "version" : 1
+}

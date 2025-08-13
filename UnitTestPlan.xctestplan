@@ -1,0 +1,81 @@
+{
+  "configurations" : [
+    {
+      "id" : "95A5F3C1-8B2E-4F5D-A9C7-1234567890AB",
+      "name" : "Unit Tests Configuration",
+      "options" : {
+        "codeCoverage" : {
+          "enabled" : true,
+          "targets" : [
+            {
+              "containerPath" : "container:",
+              "identifier" : "GolfFinderSwiftUI",
+              "name" : "GolfFinderSwiftUI"
+            },
+            {
+              "containerPath" : "container:",
+              "identifier" : "GolfFinderWatch",
+              "name" : "GolfFinderWatch"
+            }
+          ]
+        },
+        "environmentVariableEntries" : [
+          {
+            "key" : "TEST_ENVIRONMENT",
+            "value" : "unit_tests"
+          },
+          {
+            "key" : "USE_MOCK_SERVICES",
+            "value" : "true"
+          },
+          {
+            "key" : "ENABLE_PERFORMANCE_MONITORING",
+            "value" : "true"
+          }
+        ],
+        "language" : "en",
+        "region" : "US",
+        "testTimeoutsEnabled" : true,
+        "defaultTestExecutionTimeAllowance" : 60,
+        "maximumTestExecutionTimeAllowance" : 600
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "enabled" : true
+    },
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GolfFinderSwiftUITests",
+        "name" : "GolfFinderSwiftUITests"
+      },
+      "selectedTests" : [
+        "APIGatewayServiceTests",
+        "GolfCourseServiceTests",
+        "ServiceContainerTests",
+        "RevenueServiceTests",
+        "SecurityServiceTests",
+        "TenantConfigurationServiceTests",
+        "LocationServiceTests",
+        "WeatherServiceTests",
+        "AuthenticationServiceTests",
+        "PaymentServiceTests",
+        "BillingServiceTests",
+        "AnalyticsServiceTests",
+        "PerformanceMonitoringServiceTests",
+        "CrashReportingServiceTests",
+        "NotificationServiceTests",
+        "HapticFeedbackServiceTests",
+        "WatchConnectivityServiceTests",
+        "CacheServiceTests",
+        "ImageCacheServiceTests"
+      ]
+    }
+  ],
+  "version" : 1
+}
