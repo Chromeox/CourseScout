@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "GolfFinderSwiftUI",
+    name: "CourseScout",
     platforms: [
         .iOS(.v16),
         .macOS(.v14),
@@ -10,12 +10,12 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "GolfFinderSwiftUI",
-            targets: ["GolfFinderSwiftUI"]
+            name: "CourseScout",
+            targets: ["CourseScout"]
         ),
         .library(
-            name: "GolfFinderWatch",
-            targets: ["GolfFinderWatch"]
+            name: "CourseScoutWatch",
+            targets: ["CourseScoutWatch"]
         ),
     ],
     dependencies: [
@@ -41,7 +41,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "GolfFinderSwiftUI",
+            name: "CourseScout",
             dependencies: [
                 .product(name: "Appwrite", package: "sdk-for-swift"),
                 .product(name: "StripePaymentSheet", package: "stripe-ios"),
@@ -54,19 +54,19 @@ let package = Package(
                 .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
             ],
-            path: "GolfFinderApp"
+            path: "CourseScoutApp"
         ),
         .target(
-            name: "GolfFinderWatch",
+            name: "CourseScoutWatch",
             dependencies: [
                 .product(name: "Appwrite", package: "sdk-for-swift"),
             ],
-            path: "GolfFinderWatch"
+            path: "CourseScoutWatch"
         ),
         .testTarget(
-            name: "GolfFinderSwiftUITests",
-            dependencies: ["GolfFinderSwiftUI"],
-            path: "Tests"
+            name: "CourseScoutTests",
+            dependencies: ["CourseScout"],
+            path: "CourseScoutAppTests"
         ),
     ]
 )
