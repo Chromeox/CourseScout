@@ -1,4 +1,4 @@
-name: CourseScout Enterprise CI/CD Pipeline
+name: TeeStack Enterprise CI/CD Pipeline
 
 on:
   push:
